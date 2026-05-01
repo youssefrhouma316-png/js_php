@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="800" viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title">
+  <title>Pod privé</title>
+  <defs>
+    <linearGradient id="grad1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#6c63ff" />
+      <stop offset="100%" stop-color="#3b82f6" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" rx="40" fill="#121725" />
+  <rect x="220" y="260" width="760" height="320" rx="32" fill="url(#grad1)" opacity=".18" />
+  <rect x="320" y="330" width="560" height="180" rx="26" fill="#1f2432" />
+  <rect x="380" y="380" width="440" height="24" rx="12" fill="#ced4fc" opacity=".9" />
+  <rect x="380" y="430" width="240" height="14" rx="7" fill="#ced4fc" opacity=".75" />
+  <rect x="380" y="470" width="320" height="14" rx="7" fill="#ced4fc" opacity=".75" />
+  <circle cx="600" cy="600" r="50" fill="#6c63ff" opacity=".85" />
+  <text x="300" y="210" fill="#eef2ff" font-family="Syne, sans-serif" font-size="50" font-weight="700">Pod Privé</text>
+</svg>

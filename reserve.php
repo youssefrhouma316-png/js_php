@@ -94,7 +94,7 @@ include 'includes/header.php';
             </div>
             
             <div id="pod_info" class="mt-2" style="display: <?= $pod ? 'block' : 'none' ?>;">
-                <img id="pod_image" src="assets/uploads/<?= $pod['image'] ?? 'default-pod.jpg' ?>" class="card-img mb-2" style="height: 200px; object-fit: cover;">
+                <img id="pod_image" src="assets/pics/<?= htmlspecialchars($pod['image'] ?? 'default-pod.jpg') ?>" class="card-img mb-2" style="height: 200px; object-fit: cover;">
                 <h4 id="pod_name"><?= $pod['nom'] ?? '' ?></h4>
                 <p class="text-muted" id="pod_desc"><?= $pod['description'] ?? '' ?></p>
                 <div class="pod-price" id="pod_price"><?= $pod['prix_heure'] ?? 0 ?> DT <span>/ heure</span></div>

@@ -21,10 +21,10 @@ CREATE TABLE IF NOT EXISTS `users` (
     `created_at` TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Admin par défaut (password: Admin@123)
+-- Admin par défaut (identifiant: admin / password: 123)
 INSERT INTO `users` (`nom`,`prenom`,`email`,`password`,`role`) VALUES
-('Admin','WorkPods','admin@workpods.test',
- '$2y$12$YDummyHashReplaceWithRealBcryptAdmin', 'admin');
+('Admin','WorkPods','admin',
+ '$2y$10$SjOAIaJk9VDiF/RhjJmQOu.PMuC1.ooPLO5QylQu0f.976X64qk4e', 'admin');
 
 -- ── Table : pods (Entité 1) ──────────────────
 CREATE TABLE IF NOT EXISTS `pods` (
@@ -44,8 +44,12 @@ CREATE TABLE IF NOT EXISTS `pods` (
 INSERT INTO `pods` (`nom`,`description`,`capacite`,`prix_heure`,`equipements`,`image`) VALUES
 ('Pod Solo Zen',   'Espace insonorisé idéal pour une concentration maximale.',  1, 8.00,  '["Wi-Fi Fibre","Climatisation","Bureau ergonomique","Prise 220V"]',        'pod1.jpg'),
 ('Pod Focus Pro',  'Équipé d\'un double écran et d\'une chaise gaming.',         1, 12.00, '["Wi-Fi Fibre","Double écran","Chaise gaming","Webcam HD","Lampe LED"]',    'pod2.jpg'),
-('Pod Duo',        'Parfait pour les réunions à deux ou le pair-programming.',   2, 18.00, '["Wi-Fi Fibre","Écran partagé","Tableau blanc","2 chaises ergonomiques"]',  'pod3.jpg'),
-('Pod Créatif',    'Inspirant et lumineux pour vos projets créatifs.',           1, 10.00, '["Wi-Fi Fibre","Tablette graphique","Imprimante","Lumière naturelle"]',     'pod4.jpg');
+('Pod Privé',      'Espace isolé pour les appels, la concentration et le travail individuel.', 1, 15.00, '["Wi-Fi Fibre","Bureau ergonomique","Climatisation","Prise 220V"]',    'pod%20prive.jpg'),
+('Pod Équipe',     'Parfait pour les réunions à deux ou le pair-programming.',   2, 25.00, '["Wi-Fi Fibre","Écran partagé","Tableau blanc","2 chaises ergonomiques"]',  'pod%20equipe.jpg'),
+('Pod Créatif',    'Inspirant et lumineux pour vos projets créatifs et collaboratifs.',  2, 18.00, '["Wi-Fi Fibre","Tablette graphique","Imprimante","Lumière naturelle"]',    'pod.jpg'),
+('Pod Duo Premium', 'Petit espace confortable pour les réunions en tête-à-tête.',   2, 22.00, '["Wi-Fi Fibre","Écran 4K","Chaises ergonomiques","Caméra HD"]',    'pod3.jpg'),
+('Pod Open',       'Espace semi-ouvert pour les échanges informels et le coworking.', 3, 20.00, '["Wi-Fi Fibre","Tables modulables","Éclairage LED","Prises multiples"]',     'pod4.jpg'),
+('Pod Zen Premium', 'Espace de détente avec ambiance paisible et équipements premium.', 1, 25.00, '["Wi-Fi Fibre","Fauteuil relax","Lumière apaisante","Silence garanti"]',    'podd.jpg');
 
 -- ── Table : reservations (Entité 2) ─────────
 CREATE TABLE IF NOT EXISTS `reservations` (
