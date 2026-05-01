@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="800" viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title">
+  <title>Pod équipe</title>
+  <defs>
+    <linearGradient id="grad2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f97316" />
+      <stop offset="100%" stop-color="#fbbf24" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" rx="40" fill="#141b26" />
+  <rect x="220" y="260" width="760" height="320" rx="32" fill="url(#grad2)" opacity=".18" />
+  <rect x="300" y="330" width="600" height="220" rx="28" fill="#1e2736" />
+  <rect x="360" y="390" width="160" height="20" rx="10" fill="#fde68a" />
+  <rect x="560" y="420" width="180" height="20" rx="10" fill="#fde68a" />
+  <rect x="360" y="470" width="80" height="80" rx="16" fill="#f97316" opacity=".9" />
+  <rect x="500" y="470" width="80" height="80" rx="16" fill="#fb923c" opacity=".9" />
+  <rect x="640" y="470" width="80" height="80" rx="16" fill="#fbbf24" opacity=".9" />
+  <text x="300" y="210" fill="#f8fafc" font-family="Syne, sans-serif" font-size="50" font-weight="700">Pod Équipe</text>
+</svg>
