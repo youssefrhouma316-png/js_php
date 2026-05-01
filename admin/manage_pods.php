@@ -1,5 +1,12 @@
 <?php
+session_start();
 require_once '../config/db.php';
+
+if (!isset($_SESSION['user_id']) || ($_SESSION['user_role'] ?? '') !== 'admin') {
+    header('Location: ../login.php');
+    exit;
+}
+
 include '../includes/header.php';
 
 $db = getDB();
@@ -15,10 +22,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_pod'])) {
     if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
         $fileExt = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
         $fileName = uniqid('pod_') . '.' . $fileExt;
-        $destination = '../assets/uploads/' . $fileName;
+        $destination = '../assets/pics/' . $fileName;
 
         if (move_uploaded_file($_FILES['image']['tmp_name'], $destination)) {
-            $stmt = $db->prepare("INSERT INTO pods (nom, description, prix_heure, image_url) VALUES (?, ?, ?, ?)");
+            $stmt = $db->prepare("INSERT INTO pods (nom, description, prix_heure, image) VALUES (?, ?, ?, ?)");
             $stmt->execute([$nom, $desc, $prix, $fileName]);
             $message = "Pod ajouté avec succès !";
         }
@@ -74,7 +81,7 @@ $pods = $db->query("SELECT * FROM pods ORDER BY id DESC")->fetchAll();
         <tbody>
             <?php foreach ($pods as $pod): ?>
             <tr>
-                <td><img src="../assets/uploads/<?= $pod['image_url'] ?>" width="60"></td>
+                <td><img src="../assets/pics/<?= htmlspecialchars($pod['image'] ?? 'default-pod.jpg') ?>" width="60"></td>
                 <td><?= htmlspecialchars($pod['nom']) ?></td>
                 <td><?= $pod['prix_heure'] ?> DT</td>
                 <td>
