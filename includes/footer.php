@@ -5,10 +5,6 @@
                     <h3>Work<span>Pods</span></h3>
                     <p>Travaillez mieux, n'importe où.</p>
                 </div>
-                <div class="footer-copy">
-                    <p>&copy; <?php echo date('Y'); ?> WorkPods - Projet PHP/JS</p>
-                    <p class="text-muted">Étudiants : Binôme TEK-UP</p>
-                </div>
             </div>
         </div>
     </footer>
