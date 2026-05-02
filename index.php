@@ -34,16 +34,13 @@ $pods = $db->query("SELECT * FROM pods ORDER BY nom ASC")->fetchAll();
                 </div>
             </div>
             <div class="hero-visual">
-                <div class="hero-image-frame">
-                    <img src="assets/pics/pod.jpg" alt="Pod Premium" class="hero-main-img">
-                    <div class="hero-card hero-card-floating">
-                        <div class="hero-card-label">Sélection recommandée</div>
-                        <h3>Pod Premium</h3>
-                        <p class="text-muted">Isolation phonique, bureau ergonomique et écran 24" pour un confort pro.</p>
-                        <div class="hero-card-meta">
-                            <span class="pill pill-confirmed">Disponible</span>
-                            <span class="hero-price">35 DT / heure</span>
-                        </div>
+                <div class="hero-card hero-card-floating hero-card-static">
+                    <div class="hero-card-label">Sélection recommandée</div>
+                    <h3>Pod Premium</h3>
+                    <p class="text-muted">Isolation phonique, bureau ergonomique et écran 24" pour un confort pro.</p>
+                    <div class="hero-card-meta">
+                        <span class="pill pill-confirmed">Disponible</span>
+                        <span class="hero-price">35 DT / heure</span>
                     </div>
                 </div>
             </div>
