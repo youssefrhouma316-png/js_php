@@ -18,6 +18,52 @@ $total_pods = $db->query("SELECT COUNT(*) FROM pods")->fetchColumn();
 $total_clients = $db->query("SELECT COUNT(*) FROM users WHERE role = 'user'")->fetchColumn();
 $total_reservations = $db->query("SELECT COUNT(*) FROM reservations")->fetchColumn();
 
+$month = isset($_GET['month']) ? max(1, min(12, intval($_GET['month']))) : intval(date('m'));
+$year = isset($_GET['year']) ? max(2020, min(2100, intval($_GET['year']))) : intval(date('Y'));
+$monthNames = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+$monthName = $monthNames[$month - 1];
+
+$prevDate = new DateTime("$year-$month-01");
+$prevDate->modify('-1 month');
+$nextDate = new DateTime("$year-$month-01");
+$nextDate->modify('+1 month');
+
+$calendarStart = new DateTime("$year-$month-01");
+$daysInMonth = (int)$calendarStart->format('t');
+$startDayOfWeek = (int)$calendarStart->format('N');
+$weekDays = ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
+$days = array_fill(1, $daysInMonth, []);
+
+$calendarStmt = $db->prepare(
+    "SELECT r.*, u.nom AS client_nom, u.prenom AS client_prenom, u.email AS client_email, p.nom AS pod_nom
+     FROM reservations r
+     JOIN users u ON u.id = r.user_id
+     JOIN pods p ON p.id = r.pod_id
+     WHERE YEAR(r.date_resa) = ? AND MONTH(r.date_resa) = ?
+     ORDER BY r.date_resa, r.heure_debut"
+);
+$calendarStmt->execute([$year, $month]);
+$monthReservations = $calendarStmt->fetchAll();
+foreach ($monthReservations as $res) {
+    $dayIndex = (int) date('j', strtotime($res['date_resa']));
+    $days[$dayIndex][] = $res;
+}
+
+$dayCounts = array_map('count', $days);
+$maxDayCount = $dayCounts ? max($dayCounts) : 0;
+
+$upcomingStmt = $db->prepare(
+    "SELECT r.*, u.nom AS client_nom, u.prenom AS client_prenom, u.email AS client_email, p.nom AS pod_nom
+     FROM reservations r
+     JOIN users u ON u.id = r.user_id
+     JOIN pods p ON p.id = r.pod_id
+     WHERE r.date_resa >= ?
+     ORDER BY r.date_resa, r.heure_debut
+     LIMIT 6"
+);
+$upcomingStmt->execute([date('Y-m-d')]);
+$upcomingReservations = $upcomingStmt->fetchAll();
+
 $reservations = $db->query(
     "SELECT r.*, u.nom AS client_nom, u.prenom AS client_prenom, u.email AS client_email, p.nom AS pod_nom
      FROM reservations r
@@ -62,6 +108,69 @@ include '../includes/header.php';
             <h2 class="text-accent"><?= $total_reservations ?></h2>
         </div>
     </div>
+
+    <section class="card mt-3 admin-calendar-section">
+        <div class="calendar-header-row">
+            <div>
+                <span class="tag">Calendrier de réservation</span>
+                <h3><?= $monthName ?> <?= $year ?></h3>
+            </div>
+            <div class="calendar-nav">
+                <a href="?month=<?= $prevDate->format('m') ?>&year=<?= $prevDate->format('Y') ?>" class="btn btn-ghost">← <?= $prevDate->format('F') ?></a>
+                <a href="?month=<?= $nextDate->format('m') ?>&year=<?= $nextDate->format('Y') ?>" class="btn btn-ghost"><?= $nextDate->format('F') ?> →</a>
+            </div>
+        </div>
+
+        <div class="calendar-layout">
+            <div class="calendar-card">
+                <div class="calendar-grid">
+                    <?php foreach ($weekDays as $weekday): ?>
+                        <div class="calendar-weekday"><?= $weekday ?></div>
+                    <?php endforeach; ?>
+
+                    <?php for ($i = 1; $i < $startDayOfWeek; $i++): ?>
+                        <div class="calendar-cell empty"></div>
+                    <?php endfor; ?>
+
+                    <?php for ($day = 1; $day <= $daysInMonth; $day++): ?>
+                        <?php $entries = $days[$day]; $dayCount = count($entries); ?>
+                        <div class="calendar-cell <?= ($day === intval(date('j')) && $month === intval(date('m')) && $year === intval(date('Y')) ? 'today' : '') ?> <?= ($dayCount === $maxDayCount && $maxDayCount > 0 ? 'busiest-day' : '') ?>">
+                            <div class="calendar-day"><?= $day ?></div>
+                            <?php if (!empty($entries)): ?>
+                                <span class="pill pill-confirmed" title="<?= htmlspecialchars($dayCount . ' réservation' . ($dayCount > 1 ? 's' : '')) ?>"><?= $dayCount ?> réservation<?= $dayCount > 1 ? 's' : '' ?></span>
+                                <?php foreach (array_slice($entries, 0, 2) as $entry): ?>
+                                    <div class="calendar-event" title="<?= htmlspecialchars($entry['pod_nom'] . ' • ' . $entry['client_prenom'] . ' ' . $entry['client_nom'] . ' • ' . substr($entry['heure_debut'], 0, 5)) ?>">
+                                        <strong><?= htmlspecialchars(substr($entry['heure_debut'], 0, 5)) ?></strong>
+                                        <?= htmlspecialchars($entry['pod_nom']) ?>
+                                    </div>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </div>
+                    <?php endfor; ?>
+                </div>
+            </div>
+
+            <aside class="calendar-sidebar">
+                <div class="card calendar-summary">
+                    <h4>Prochaines réservations</h4>
+                    <?php if (empty($upcomingReservations)): ?>
+                        <p class="text-muted">Aucune réservation à venir.</p>
+                    <?php else: ?>
+                        <?php foreach ($upcomingReservations as $item): ?>
+                            <div class="event-item">
+                                <div class="event-meta">
+                                    <strong><?= htmlspecialchars($item['date_resa']) ?> à <?= htmlspecialchars(substr($item['heure_debut'], 0, 5)) ?></strong>
+                                </div>
+                                <div class="event-body">
+                                    <?= htmlspecialchars($item['pod_nom']) ?> — <?= htmlspecialchars($item['client_prenom'] . ' ' . $item['client_nom']) ?>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </div>
+            </aside>
+        </div>
+    </section>
 
     <section class="card mt-3">
         <h3>Historique des Réservations (6 derniers mois)</h3>
