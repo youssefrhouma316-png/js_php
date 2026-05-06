@@ -9,6 +9,6 @@
         </div>
     </footer>
 
-    <script src="assets/js/scripts.js"></script>
+    <script src="<?= $base_path ?? '' ?>assets/js/scripts.js"></script>
 </body>
 </html>
