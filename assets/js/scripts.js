@@ -122,7 +122,7 @@ function initForms() {
 ═══════════════════════════════════════════ */
 function initFileUpload() {
   const area    = document.querySelector('.file-upload-area');
-  const input   = document.getElementById('pod-image');
+  const input   = document.getElementById('pod-image') || document.getElementById('profile-photo');
   const preview = document.getElementById('img-preview');
   if (!area || !input || !preview) return;
 

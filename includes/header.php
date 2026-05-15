@@ -22,13 +22,16 @@
                 <ul class="nav-links">
                     <li><a href="<?= $base_path ?>index.php">Accueil</a></li>
                     <li><a href="<?= $base_path ?>reserve.php">Réserver</a></li>
-                    </ul>
+                    <li><a href="<?= $base_path ?>contact.php">Contact</a></li>
+                </ul>
 
                 <div class="nav-cta">
                     <?php if (isset($_SESSION['user_id'])): ?>
                         <span class="nav-user">
                             <?php if (($_SESSION['user_role'] ?? '') === 'admin'): ?>
                                 <a href="<?= $base_path ?>admin/dashboard.php" class="btn btn-outline" style="background: rgba(108,99,255,.15); border-color: var(--accent2);">Tableau de Bord</a>
+                            <?php else: ?>
+                                <a href="<?= $base_path ?>account.php" class="btn btn-outline">Mon compte</a>
                             <?php endif; ?>
                             <span style="color: var(--muted); font-size: .9rem;">Bienvenue, <?= htmlspecialchars($_SESSION['user_nom'] ?? 'Utilisateur') ?></span>
                             <a href="<?= $base_path ?>logout.php" class="btn btn-outline">Déconnecter</a>

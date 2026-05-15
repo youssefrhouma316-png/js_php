@@ -17,6 +17,11 @@ CREATE TABLE IF NOT EXISTS `users` (
     `email`      VARCHAR(180) NOT NULL UNIQUE,
     `password`   VARCHAR(255) NOT NULL,
     `telephone`  VARCHAR(20)  DEFAULT NULL,
+    `profession` VARCHAR(120) DEFAULT NULL,
+    `entreprise` VARCHAR(120) DEFAULT NULL,
+    `objectif_usage` VARCHAR(160) DEFAULT NULL,
+    `adresse`    VARCHAR(255) DEFAULT NULL,
+    `photo`      VARCHAR(255) DEFAULT NULL,
     `role`       ENUM('user','admin') NOT NULL DEFAULT 'user',
     `created_at` TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -71,6 +76,20 @@ CREATE TABLE IF NOT EXISTS `reservations` (
 CREATE INDEX idx_resa_date   ON `reservations`(`date_resa`);
 CREATE INDEX idx_resa_statut ON `reservations`(`statut`);
 CREATE INDEX idx_resa_user   ON `reservations`(`user_id`);
+
+-- Table : messages de contact
+CREATE TABLE IF NOT EXISTS `contact_messages` (
+    `id`         INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    `nom`        VARCHAR(120) NOT NULL,
+    `email`      VARCHAR(180) NOT NULL,
+    `telephone`  VARCHAR(30)  DEFAULT NULL,
+    `sujet`      VARCHAR(160) NOT NULL,
+    `message`    TEXT         NOT NULL,
+    `rappel_souhaite` TINYINT(1) NOT NULL DEFAULT 0,
+    `creneau_rappel` VARCHAR(80) DEFAULT NULL,
+    `statut`     ENUM('nouveau','lu','traite') NOT NULL DEFAULT 'nouveau',
+    `created_at` TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ── Vue : statistiques mensuelles ───────────
 CREATE OR REPLACE VIEW `v_stats_monthly` AS

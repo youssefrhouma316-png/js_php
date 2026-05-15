@@ -17,6 +17,21 @@ $total_users = $db->query("SELECT COUNT(*) FROM users WHERE role = 'user'")->fet
 $total_pods = $db->query("SELECT COUNT(*) FROM pods")->fetchColumn();
 $total_clients = $db->query("SELECT COUNT(*) FROM users WHERE role = 'user'")->fetchColumn();
 $total_reservations = $db->query("SELECT COUNT(*) FROM reservations")->fetchColumn();
+$db->exec(
+    "CREATE TABLE IF NOT EXISTS contact_messages (
+        id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        nom VARCHAR(120) NOT NULL,
+        email VARCHAR(180) NOT NULL,
+        telephone VARCHAR(30) DEFAULT NULL,
+        sujet VARCHAR(160) NOT NULL,
+        message TEXT NOT NULL,
+        rappel_souhaite TINYINT(1) NOT NULL DEFAULT 0,
+        creneau_rappel VARCHAR(80) DEFAULT NULL,
+        statut ENUM('nouveau','lu','traite') NOT NULL DEFAULT 'nouveau',
+        created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"
+);
+$total_messages = $db->query("SELECT COUNT(*) FROM contact_messages WHERE statut = 'nouveau'")->fetchColumn();
 
 $month = isset($_GET['month']) ? max(1, min(12, intval($_GET['month']))) : intval(date('m'));
 $year = isset($_GET['year']) ? max(2020, min(2100, intval($_GET['year']))) : intval(date('Y'));
@@ -87,6 +102,11 @@ include '../includes/header.php';
 <main class="container section">
     <div class="flex-between align-center mb-3">
         <h1>Tableau de Bord</h1>
+        <div class="d-flex gap-1">
+            <a href="manage_clients.php" class="btn btn-outline">Clients</a>
+            <a href="manage_reservations.php" class="btn btn-outline">Reservations</a>
+            <a href="manage_messages.php" class="btn btn-outline">Messages</a>
+        </div>
         <a href="manage_pods.php" class="btn btn-primary">Gérer les Pods</a>
     </div>
 
@@ -108,6 +128,11 @@ include '../includes/header.php';
             <h2 class="text-accent"><?= $total_reservations ?></h2>
         </div>
     </div>
+
+    <section class="card stat-card mb-3">
+        <span class="text-muted">Messages nouveaux</span>
+        <h2 class="text-accent"><?= $total_messages ?></h2>
+    </section>
 
     <section class="card mt-3 admin-calendar-section">
         <div class="calendar-header-row">
